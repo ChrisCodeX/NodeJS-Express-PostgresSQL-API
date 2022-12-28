@@ -9,4 +9,5 @@ services:
       - POSTGRES_PASSWORD=admin123
     ports:
       - 5432:5432
-    
+    volumes:
+      - ./database/postgres_data:/var/lib/postgresql/data
