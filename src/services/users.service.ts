@@ -1,9 +1,9 @@
 import faker from 'faker';
 import {User} from '../models/users.models'
-import {pool} from '../libs/postgres'
+import { sequelize } from '../libs/sequelize';
 
 export class UsersService {
-  users: User[] = []
+  users: any[] = []
   constructor(){
     this.generate()
   }
@@ -20,13 +20,15 @@ export class UsersService {
     }
   }
 
-  public create(data: User) {
-    const newUser = {
-      id: faker.datatype.uuid(),
-      ...data
-    }
-    this.users.push(newUser)
-    return newUser
+  public async create(data: User) {
+    return new Promise(async (resolve, reject)=>{
+      try {
+        const newUser = await sequelize.models.User.create(data as any)
+        resolve(newUser)
+      } catch (error) {
+        reject(error)
+      }
+    })
   }
 
   public findOne(id: string) {
@@ -40,9 +42,12 @@ export class UsersService {
   public async find() {
     return new Promise(async (resolve, reject) => {
       try {
-        const query = 'SELECT * FROM tasks';
-        const rta = await pool.query(query)
-        resolve(rta.rows)
+        /* Query consult */
+        // const query = 'SELECT * FROM tasks';
+        // const rta = await pool.query(query)
+        /* Consulta usando ORM */
+        const rta = await sequelize.models.User.findAll()
+        resolve(rta)
       } catch (error) {
         reject(error)
       }
