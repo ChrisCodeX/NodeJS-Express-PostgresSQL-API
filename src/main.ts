@@ -11,7 +11,7 @@ const port = 3000;
 app.use(express.json());
 
 /* Configurar el acceso a la API desde cualquier dominio */
-//app.use(cors());
+app.use(cors());
 
 /* Configurar el acceso a dominios personalizados */
 const whitelist = ['http://localhost:8080', 'http://localhost:5500', 'https://myapp.co']
@@ -24,7 +24,7 @@ const options = {
     }
   }
 }
-app.use(cors(options))
+// app.use(cors(options))
 
 /* Routes assigned to application instance */
 routerApi(app);

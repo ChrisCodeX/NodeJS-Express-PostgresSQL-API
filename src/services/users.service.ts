@@ -1,5 +1,6 @@
 import faker from 'faker';
 import {User} from '../models/users.models'
+import {GetConnection} from '../libs/postgres'
 
 export class UsersService {
   users: User[] = []
@@ -36,8 +37,10 @@ export class UsersService {
     return this.users[index]
   }
 
-  public find() {
-    return this.users
+  public async find() {
+    const client = await GetConnection();
+    const rta = await client.query('SELECT * FROM tasks')
+    return rta.rows
   }
 
   public update(id: string, changes: any) {
