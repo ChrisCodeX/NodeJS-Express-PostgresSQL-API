@@ -1,6 +1,6 @@
 import faker from 'faker';
 import {User} from '../models/users.models'
-import {GetConnection} from '../libs/postgres'
+import {pool} from '../libs/postgres'
 
 export class UsersService {
   users: User[] = []
@@ -38,9 +38,15 @@ export class UsersService {
   }
 
   public async find() {
-    const client = await GetConnection();
-    const rta = await client.query('SELECT * FROM tasks')
-    return rta.rows
+    return new Promise(async (resolve, reject) => {
+      try {
+        const query = 'SELECT * FROM tasks';
+        const rta = await pool.query(query)
+        resolve(rta.rows)
+      } catch (error) {
+        reject(error)
+      }
+    })
   }
 
   public update(id: string, changes: any) {

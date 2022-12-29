@@ -9,10 +9,10 @@ const usersService = new UsersService()
 router.get('/', async (req, res) => {
   try {
     const users = await usersService.find()
-    res.json(users)
+    res.status(200).json(users)
   } catch (error) {
     if (error instanceof Error) {
-      res.json({
+      res.status(500).json({
         message: error.message
       })
     }
@@ -26,7 +26,7 @@ router.get('/:id', (req,res)=>{
     res.status(200).json(user);
   } catch (error) {
     if (error instanceof Error) {
-      res.json({
+      res.status(500).json({
         message: error.message
       })
     }

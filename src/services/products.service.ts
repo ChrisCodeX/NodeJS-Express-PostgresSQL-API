@@ -1,12 +1,20 @@
 import faker from 'faker';
 import { Product } from '../models/products.model';
 import boom from '@hapi/boom'
+import { pool } from '../libs/postgres';
+import { Pool } from 'pg';
+import { sequelize } from '../libs/sequelize';
 
 export class ProductService {
   public products: Product[]
+  public pool: Pool
   constructor(){
     this.products = []
     this.generate();
+    this.pool = pool;
+    this.pool.on('error', (err) => {
+      console.error(err)
+    })
   }
 
   private generate() {
@@ -43,10 +51,14 @@ export class ProductService {
   }
 
   public async find() {
-    return new Promise<Product[]>((resolve) => {
-      setTimeout(() => {
-        resolve(this.products)
-      }, 1000);
+    return new Promise<unknown>(async (resolve, reject) => {
+      try {
+        const query = 'SELECT * FROM tasks'
+        const [data] = await sequelize.query(query)
+        resolve(data)
+      } catch (error) {
+        reject(error)
+      }
     })
   }
 
