@@ -1,20 +1,20 @@
 import express from 'express';
 import { UsersService } from '../services/users.service';
+import { validatorHandler } from '../middleware/validator.handler';
+import { createUserSchema } from '../schemas/user.schema';
 
 export const router = express.Router();
 
 const usersService = new UsersService()
 
 /* Get Methods */
-router.get('/', async (req, res) => {
+router.get('/', async (req, res, next) => {
   try {
     const users = await usersService.find()
     res.status(200).json(users)
   } catch (error) {
     if (error instanceof Error) {
-      res.status(500).json({
-        message: error.message
-      })
+      next(error)
     }
   }
 })
@@ -34,19 +34,19 @@ router.get('/:id', (req,res)=>{
 });
 
 /* Post Methods */
-router.post('/', (req, res) => {
-  try {
-    const body = req.body;
-    const user = usersService.create(body);
-    res.status(200).json(user);
-  } catch (error) {
-    if (error instanceof Error) {
-      res.status(500).json({
-        message: error.message
-      })
+router.post('/',
+  validatorHandler(createUserSchema, 'body'),
+  async (req, res, next) => {
+    try {
+      const body = req.body;
+      const user = await usersService.create(body);
+      res.status(200).json(user);
+    } catch (error) {
+      if (error instanceof Error) {
+        next(error)
+      }
     }
-  }
-})
+  })
 
 /* Patch Methods */
 router.patch('/:id', (req, res) => {
