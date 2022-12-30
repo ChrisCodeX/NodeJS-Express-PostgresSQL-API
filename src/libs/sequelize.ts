@@ -15,5 +15,5 @@ export const sequelize = new Sequelize(URI, {
 // Configuración de los modelos para las tablas de la base de datos
 setupModels(sequelize);
 
-// Creación de las tablas
-sequelize.sync();
+// Creación de las tablas a través de la sincronización
+// sequelize.sync();

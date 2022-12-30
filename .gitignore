@@ -2,10 +2,9 @@
 # Edit at https://www.toptal.com/developers/gitignore?templates=linux,windows,macos,node
 
 ## My Env
-/database/postgres_data
-/database/mysql_data
-/test
 /src/database/postgres_data
+/src/database/mysql_data
+/test
 
 ### Linux ###
 *~

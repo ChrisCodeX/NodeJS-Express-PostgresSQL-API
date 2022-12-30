@@ -1,6 +1,6 @@
 import {Model, DataTypes, Sequelize} from 'sequelize';
-// import { sequelize } from '../../libs/sequelize';
 
+// User table name
 export const USER_TABLE = 'users';
 
 // User Schema
