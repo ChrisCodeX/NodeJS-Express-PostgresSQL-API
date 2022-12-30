@@ -6,24 +6,23 @@ import { createProductSchema, updateProductSchema, getProductSchema } from '../s
 /* Router */
 export const router = express.Router();
 
+/* Product Service */
 const productService = new ProductService();
 
-/* Products endpoints */
+/* Products Endpoints */
 
-// Query parameters
-// Uri: /products?size=xx
-router.get('/',async (req, res, next)=>{
+/* Get Methods */
+// Get all products
+router.get('/', async (req, res, next)=>{
   try {
     const products = await productService.find()
     res.status(200).json(products);
   } catch (error) {
-    if (error instanceof Error) {
-      next(error)
-    }
+    next(error)
   }
 });
 
-// Get a parameter from request
+// Get idProduct from request
 router.get('/:idProduct',
   validatorHandler(getProductSchema, 'params'),
   async (req, res, next) => {
@@ -33,13 +32,12 @@ router.get('/:idProduct',
 
       res.status(200).json(product);
     } catch (error) {
-      if (error instanceof Error) {
-        next(error)
-      }
+      next(error)
     }
   });
 
 /* Post Methods */
+// Create new product
 router.post('/',
   validatorHandler(createProductSchema, 'body'),
   async (req, res, next) => {
@@ -48,13 +46,12 @@ router.post('/',
       const newProduct = await productService.create(body);
       res.status(201).json(newProduct)
     } catch (error) {
-      if (error instanceof Error) {
-        next(error)
-      }
+      next(error)
     }
   })
 
 /* Patch Methods */
+// Update a product
 router.patch('/:id',
   validatorHandler(getProductSchema, 'params'),
   validatorHandler(updateProductSchema, 'body'),
@@ -66,13 +63,12 @@ router.patch('/:id',
       const product = await productService.update(id, body)
       res.status(200).json(product)
     } catch (error) {
-      if (error instanceof Error) {
-        next(error)
-      }
+      next(error)
     }
   })
 
 /* Delete Methods */
+// Delete a product
 router.delete('/:id',
   validatorHandler(getProductSchema, 'params'),
   async (req, res, next) => {
@@ -83,8 +79,6 @@ router.delete('/:id',
         id: product
       });
     } catch (error) {
-      if (error instanceof Error) {
-        next(error)
-      }
+      next(error)
     }
   })

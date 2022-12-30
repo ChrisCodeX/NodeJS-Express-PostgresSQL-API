@@ -1,80 +1,78 @@
 import express from 'express';
 import { UsersService } from '../services/users.service';
 import { validatorHandler } from '../middleware/validator.handler';
-import { createUserSchema } from '../schemas/user.schema';
+import { createUserSchema, updateUserSchema, getUserSchema } from '../schemas/user.schema';
 
+/* Router */
 export const router = express.Router();
 
+/* User Service */
 const usersService = new UsersService()
 
 /* Get Methods */
+// Get all users
 router.get('/', async (req, res, next) => {
   try {
     const users = await usersService.find()
     res.status(200).json(users)
   } catch (error) {
-    if (error instanceof Error) {
-      next(error)
-    }
+    next(error)
   }
 })
 
-router.get('/:id', (req,res)=>{
-  try {
-    const {id} = req.params;
-    const user = usersService.findOne(id)
-    res.status(200).json(user);
-  } catch (error) {
-    if (error instanceof Error) {
-      res.status(500).json({
-        message: error.message
-      })
+// Get a user by id
+router.get('/:id',
+  validatorHandler(getUserSchema, 'params'),
+  async (req, res, next) => {
+    try {
+      const { id } = req.params;
+      const user = await usersService.findOne(id)
+      res.status(200).json(user);
+    } catch (error) {
+      next(error)
     }
-  }
-});
+  });
 
 /* Post Methods */
+// Create a new user
 router.post('/',
   validatorHandler(createUserSchema, 'body'),
   async (req, res, next) => {
     try {
       const body = req.body;
       const user = await usersService.create(body);
-      res.status(200).json(user);
+      res.status(201).json(user);
     } catch (error) {
-      if (error instanceof Error) {
-        next(error)
-      }
+      next(error)
     }
   })
 
 /* Patch Methods */
-router.patch('/:id', (req, res) => {
-  try {
-    const {id} = req.params
-    const body = req.body
-    const user = usersService.update(id, body)
-    res.json(user);
-  } catch (error) {
-    if (error instanceof Error) {
-      res.status(500).json({
-        message: error.message
-      })
+// Update a user
+router.patch('/:id',
+  validatorHandler(getUserSchema, 'params'),
+  validatorHandler(updateUserSchema, 'body'),
+  async (req, res, next) => {
+    try {
+      const { id } = req.params
+      const body = req.body
+      const user = await usersService.update(id, body)
+      res.status(200).json(user);
+    } catch (error) {
+      next(error)
     }
-  }
-})
+  })
 
 /* Delete Methods */
-router.delete('/:id', (req, res) => {
-  try {
-    const {id} = req.params
-    const user = usersService.delete(id);
-    res.json(user)
-  } catch (error) {
-    if (error instanceof Error) {
-      res.status(500).json({
-        message: error.message
-      })
+// Delete a user
+router.delete('/:id',
+  validatorHandler(getUserSchema, 'params'),
+  async (req, res, next) => {
+    try {
+      const { id } = req.params
+      const user = await usersService.delete(id);
+      res.status(200).json(user)
+    } catch (error) {
+      next(error)
     }
-  }
-})
+  })

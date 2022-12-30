@@ -3,6 +3,7 @@
 
 ## My Env
 /database/postgres_data
+/database/mysql_data
 /test
 /src/database/postgres_data
 

@@ -1,6 +1,9 @@
 import faker from 'faker';
-import {User} from '../models/users.models'
+import {User} from '../models/users.models';
 import { sequelize } from '../libs/sequelize';
+import boom from '@hapi/boom';
+import {Model} from 'sequelize'
+import { setupModels } from '../database/models';
 
 export class UsersService {
   users: any[] = []
@@ -31,12 +34,18 @@ export class UsersService {
     })
   }
 
-  public findOne(id: string) {
-    const index = this.users.findIndex(item => item.id === id)
-    if (index === -1) {
-      throw new Error('user not found')
-    }
-    return this.users[index]
+  public async findOne(id: string) {
+    return new Promise<Model<any, any> | null>(async (resolve, reject)=>{
+      try {
+        const user = await sequelize.models.User.findByPk(id)
+        if (!user) {
+          throw boom.notFound('user not found')
+        }
+        resolve(user)
+      } catch (error) {
+        reject(error)
+      }
+    })
   }
 
   public async find() {
@@ -54,25 +63,27 @@ export class UsersService {
     })
   }
 
-  public update(id: string, changes: any) {
-    const index = this.users.findIndex(item => item.id === id)
-    if (index === -1) {
-      throw new Error('user not found')
-    }
-
-    const user = {
-      ...changes
-    }
-    this.users[index] = user
-    return user
+  public async update(id: string, changes: any) {
+    return new Promise(async (resolve, reject)=>{
+      try {
+        const user = await this.findOne(id)
+        const rta = await user?.update(changes)
+        resolve(rta)
+      } catch (error) {
+        reject(error)
+      }
+    })
   }
 
-  public delete(id: string) {
-    const index = this.users.findIndex(item => item.id === id);
-    if (index === -1) {
-      throw new Error('user not found')
-    }
-    this.users.splice(index, 1)
-    return {id}
+  public async delete(id: string) {
+    return new Promise(async (resolve, reject)=>{
+      try {
+        const user = await this.findOne(id)
+        await user?.destroy();
+        resolve(id)
+      } catch (error) {
+        reject(error)
+      }
+    })
   }
 }
