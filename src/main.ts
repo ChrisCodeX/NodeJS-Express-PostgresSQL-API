@@ -1,6 +1,6 @@
 import express from 'express';
 import { routerApi } from './routes';
-import { logErrors, errorHandler, boomErrorHandler } from './middleware/error.handler';
+import { logErrors, dbErrorHandler, boomErrorHandler } from './middleware/error.handler';
 import cors from 'cors';
 
 const app = express();
@@ -35,7 +35,7 @@ Otros middlewares van delante
 
 app.use(logErrors)
 app.use(boomErrorHandler)
-app.use(errorHandler)
+app.use(dbErrorHandler)
 
 /* Listen message */
 console.log('listening on port:', port);
