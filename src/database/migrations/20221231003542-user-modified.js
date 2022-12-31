@@ -1,10 +1,10 @@
-import {Model, DataTypes, Sequelize} from 'sequelize';
+'use strict';
 
-// User table name
-export const USER_TABLE = 'users';
+const {DataTypes} = require('sequelize')
 
-// User Schema
-export const UserSchema = {
+const USER_TABLE = 'users';
+
+const UserSchema = {
   id: {
     allowNull: false,
     autoIncrement: true,
@@ -33,17 +33,13 @@ export const UserSchema = {
   }
 }
 
-export class User extends Model {
-  static assocciate() {
-    // 
-  }
+/** @type {import('sequelize-cli').Migration} */
+module.exports = {
+  async up (queryInterface) {
+    await queryInterface.addColumn(USER_TABLE, 'role', UserSchema.role);
+  },
 
-  static config(sequelize: Sequelize) {
-    return {
-      sequelize,
-      tableName: USER_TABLE,
-      modelName: 'User',
-      timestamps: false
-    }
+  async down (queryInterface) {
+    await queryInterface.removeColumn(USER_TABLE, 'role');
   }
-}
+};
