@@ -53,10 +53,15 @@ class customerService {
   }
 
   /* Delete a customer */
-  public async delete() {
-    return new Promise((resolve, reject) => {
+  public async delete(id: string) {
+    return new Promise(async (resolve, reject) => {
       try {
-        
+        const customer = await this.findOne(id)
+        if (!customer) {
+          throw boom.notFound('customer not found')
+        }
+        const rta = await customer.destroy()
+        resolve(rta)
       } catch (error) {
         reject(error)
       }
