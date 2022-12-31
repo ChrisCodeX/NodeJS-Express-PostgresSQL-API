@@ -1,5 +1,5 @@
-import { Sequelize } from "sequelize"
 import { sequelize } from "../libs/sequelize"
+import boom from '@hapi/boom'
 
 class customerService {
   constructor() {
@@ -23,6 +23,9 @@ class customerService {
     return new Promise(async (resolve, reject) => {
       try {
         const customer = await sequelize.models.Customer.findByPk(id)
+        if (!customer) {
+          throw boom.notFound('customer not found')
+        }
         resolve(customer)
       } catch (error) {
         reject(error)
@@ -33,5 +36,10 @@ class customerService {
   /* Create a customer */
   public async create() {
 
+  }
+
+  /* Update customer data */
+  public async update(id: string, changes: any) {
+    
   }
 }
