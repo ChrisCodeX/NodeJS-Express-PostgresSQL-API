@@ -3,6 +3,7 @@ import {User} from '../models/users.models';
 import { sequelize } from '../libs/sequelize';
 import boom from '@hapi/boom';
 import {Model} from 'sequelize';
+import { createUser, updateUser, getUser } from '../schemas/user.schema';
 
 export class UsersService {
   users: any[] = []
@@ -22,7 +23,7 @@ export class UsersService {
     }
   }
 
-  public async create(data: User) {
+  public async create(data: createUser) {
     return new Promise(async (resolve, reject)=>{
       try {
         const newUser = await sequelize.models.User.create(data as any)
@@ -62,7 +63,7 @@ export class UsersService {
     })
   }
 
-  public async update(id: string, changes: any) {
+  public async update(id: string, changes: updateUser) {
     return new Promise(async (resolve, reject)=>{
       try {
         const user = await this.findOne(id)
