@@ -1,5 +1,6 @@
 import { sequelize } from "../libs/sequelize"
 import boom from '@hapi/boom'
+import { Model } from "sequelize"
 
 class customerService {
   constructor() {
@@ -20,7 +21,7 @@ class customerService {
 
   /* Find just one customer */
   public async findOne(id:string) {
-    return new Promise(async (resolve, reject) => {
+    return new Promise<Model<any, any> | null>(async (resolve, reject) => {
       try {
         const customer = await sequelize.models.Customer.findByPk(id)
         if (!customer) {
@@ -40,6 +41,14 @@ class customerService {
 
   /* Update customer data */
   public async update(id: string, changes: any) {
-    
+    return new Promise(async (resolve, reject) => {
+      try {
+        const customer = await this.findOne(id)
+        const rta = await customer?.update(changes)
+        resolve(rta)
+      } catch (error) {
+        reject(error)
+      }
+    })
   }
 }
