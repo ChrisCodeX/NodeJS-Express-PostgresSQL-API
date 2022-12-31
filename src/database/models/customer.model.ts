@@ -30,3 +30,17 @@ export const CustomerSchema = {
   }
 }
 
+export class Customer extends Model {
+  static associate() {
+
+  }
+
+  static config(sequelize: Sequelize) {
+    return {
+      sequelize,
+      tableName: CUSTOMER_TABLE,
+      modelName: 'Customer',
+      timestamps: false
+    }
+  }
+}
