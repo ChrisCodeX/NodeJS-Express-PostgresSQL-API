@@ -1,5 +1,5 @@
 import {Pool} from 'pg';
-import { config } from '../config/config';
+import {config} from '../config/config';
 
 /* Conexión directa con la base de datos, manejando nosotros mismos un pool para las
 conexiones */
