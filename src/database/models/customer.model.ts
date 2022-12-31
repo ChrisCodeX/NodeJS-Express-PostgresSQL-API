@@ -6,7 +6,7 @@ export const CustomerSchema = {
   id: {
     allowNull: false,
     autoIncrement: true,
-    primeryKey: true,
+    primaryKey: true,
     type: DataTypes.INTEGER
   },
   name: {
