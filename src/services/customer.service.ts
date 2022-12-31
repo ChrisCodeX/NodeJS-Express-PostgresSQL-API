@@ -51,4 +51,15 @@ class customerService {
       }
     })
   }
+
+  /* Delete a customer */
+  public async delete() {
+    return new Promise((resolve, reject) => {
+      try {
+        
+      } catch (error) {
+        reject(error)
+      }
+    })
+  }
 }
