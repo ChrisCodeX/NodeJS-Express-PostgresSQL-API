@@ -10,15 +10,29 @@ const router = express.Router();
 const customerService = new CustomerService()
 
 /* Get Methods */
-router.get('/',
-  async (req, res, next)=>{
-    return new Promise<unknown>((resolve, reject) => {
-      try {
-        const customers = customerService.find()
-        res.status(200).json(customers)
-        resolve(customers)
-      } catch (error) {
-        reject(error)
-      }
-    })
+// Get all customers
+router.get('/', async (req, res, next) => {
+  try {
+    const customers = await customerService.find()
+    res.status(200).json(customers)
+  } catch (error) {
+    next(error)
+  }
 })
+
+// Get a customer by id
+router.get('/:id',
+  validatorHandler(getCustomerSchema, 'params'),
+  async (req, res, next) => {
+    try {
+      const { id } = req.params
+      const customer = await customerService.findOne(id)
+      res.status(200).json(customer)
+    } catch (error) {
+      next(error)
+    }
+  })
+
+/* Post Methods */
+// Create a customer
+
