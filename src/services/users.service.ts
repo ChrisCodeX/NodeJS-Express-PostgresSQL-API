@@ -55,7 +55,9 @@ export class UsersService {
         // const query = 'SELECT * FROM tasks';
         // const rta = await pool.query(query)
         /* Consulta usando ORM */
-        const rta = await sequelize.models.User.findAll()
+        const rta = await sequelize.models.User.findAll({
+          include: ['customer']
+        })
         resolve(rta)
       } catch (error) {
         reject(error)

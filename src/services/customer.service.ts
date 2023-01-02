@@ -1,6 +1,7 @@
 import { sequelize } from "../libs/sequelize"
 import boom from '@hapi/boom'
 import { Model } from "sequelize"
+import { createCustomer } from "../schemas/customer.schema"
 
 export class CustomerService {
   constructor() {
@@ -11,7 +12,9 @@ export class CustomerService {
   public async find() {
     return new Promise(async (resolve, reject) => {
       try {
-        const rta = await sequelize.models.Customer.findAll()
+        const rta = await sequelize.models.Customer.findAll({
+          include: ['user']
+        })
         resolve(rta)
       } catch (error) {
         reject(error)
@@ -35,8 +38,25 @@ export class CustomerService {
   }
 
   /* Create a customer */
-  public async create() {
-    
+  public async create(data: createCustomer) {
+    return new Promise(async (resolve, reject) => {
+      try {
+        /* Way 1 */
+        // const newUser = await sequelize.models.User.create(data.user)
+        // const newCostumer = await sequelize.models.Customer.create({
+        //   ...data,
+        //   userId: newUser.id
+        // })
+
+        /* Way 2 */
+        const newCustomer = await sequelize.models.Customer.create(data as any, {
+          include: ['user']
+        })
+        resolve(newCustomer)
+      } catch (error) {
+        reject(error)
+      }
+    })
   }
 
   /* Update customer data */

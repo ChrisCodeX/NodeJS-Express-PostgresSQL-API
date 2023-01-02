@@ -4,7 +4,7 @@ import { validatorHandler } from '../middleware/validator.handler';
 import { createCustomerSchema, getCustomerSchema, updateCustomerSchema } from '../schemas/customer.schema';
 
 /* Router */
-const router = express.Router();
+export const router = express.Router();
 
 /* Customer Service */
 const customerService = new CustomerService()
@@ -35,4 +35,15 @@ router.get('/:id',
 
 /* Post Methods */
 // Create a customer
+router.post('/',
+  validatorHandler(createCustomerSchema, 'body'),
+  async (req, res, next) => {
+    try {
+      const body = req.body
+      const newCustomer = await customerService.create(body)
+      res.status(201).json(newCustomer)
+    } catch (error) {
+      next(error)
+    }
+  })
 

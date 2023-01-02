@@ -1,6 +1,7 @@
 import { Model, DataTypes, Sequelize } from "sequelize";
+import { USER_TABLE } from "./user.model";
 
-export const CUSTOMER_TABLE = 'customer';
+export const CUSTOMER_TABLE = 'customers';
 
 export const CustomerSchema = {
   id: {
@@ -27,12 +28,24 @@ export const CustomerSchema = {
     type: DataTypes.DATE,
     field: 'created_at',
     defaultValue: DataTypes.NOW
+  },
+  userId: {
+    field: 'user_id',
+    unique: true,
+    allowNull: false,
+    type: DataTypes.INTEGER,
+    references: {
+      model: USER_TABLE,
+      key: 'id'
+    },
+    onUpdate: 'CASCADE',
+    onDelete: 'SET NULL'
   }
 }
 
 export class Customer extends Model {
-  static associate() {
-
+  static associate(models: Sequelize["models"]) {
+    this.belongsTo(models.User, {as: 'user'})
   }
 
   static config(sequelize: Sequelize) {
