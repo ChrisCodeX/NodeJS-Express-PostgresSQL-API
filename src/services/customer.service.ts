@@ -2,7 +2,7 @@ import { sequelize } from "../libs/sequelize"
 import boom from '@hapi/boom'
 import { Model } from "sequelize"
 
-class customerService {
+export class CustomerService {
   constructor() {
 
   }
