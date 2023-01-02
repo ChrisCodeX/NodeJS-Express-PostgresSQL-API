@@ -15,3 +15,8 @@ export const createCustomerSchema = Joi.object({
   phone: phone.required()
 })
 
+export const updateCustomerSchema = Joi.object({
+  name,
+  lastName,
+  phone
+})
