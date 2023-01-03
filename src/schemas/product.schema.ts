@@ -33,5 +33,6 @@ export const getProductSchema = Joi.object({
 
 export const queryProductSchema = Joi.object({
   limit,
-  offset
+  offset,
+  price
 })

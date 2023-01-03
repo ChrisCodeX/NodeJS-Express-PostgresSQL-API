@@ -13,6 +13,7 @@ export class ProductService {
       try {
         let options = {
           include: ['category'],
+          where: {},
           limit: 4,
           offset: 0
         }
@@ -20,6 +21,14 @@ export class ProductService {
         if (limit && offset) {
           options.limit = limit;
           options.offset = offset
+        }
+
+        const {price} = query
+
+        if (price) {
+          options.where = {
+            price: price
+          }
         }
         const products = await sequelize.models.Product.findAll(options)
         resolve(products)

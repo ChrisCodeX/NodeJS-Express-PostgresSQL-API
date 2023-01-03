@@ -1,11 +1,14 @@
-import {Model, DataTypes, Sequelize} from 'sequelize';
-import { CATEGORY_TABLE } from './category.model';
+'use strict';
+
+const {DataTypes} = require('sequelize');
+
+const CATEGORY_TABLE = 'categories';
 
 // Product table name
-export const PRODUCT_TABLE = 'products';
+const PRODUCT_TABLE = 'products';
 
 // Product Schema
-export const ProductSchema = {
+const ProductSchema = {
   id: {
     allowNull: false,
     autoIncrement: true,
@@ -26,7 +29,7 @@ export const ProductSchema = {
   },
   price: {
     type: DataTypes.INTEGER,
-    allowNull: false
+    allowNull: true
   },
   createdAt: {
     allowNull: false,
@@ -47,17 +50,13 @@ export const ProductSchema = {
   }
 }
 
-export class Product extends Model {
-  static associate(models: Sequelize["models"]) {
-    this.belongsTo(models.Category,{as: 'category'})
-  }
+/** @type {import('sequelize-cli').Migration} */
+module.exports = {
+  async up (queryInterface) {
+    await queryInterface.addColumn(PRODUCT_TABLE, 'price', ProductSchema.price);
+  },
 
-  static config(sequelize: Sequelize) {
-    return {
-      sequelize,
-      tableName: PRODUCT_TABLE,
-      modelName: 'Product',
-      timestamps: false
-    }
+  async down (queryInterface) {
+    await queryInterface.removeColumn(PRODUCT_TABLE, 'price');
   }
-}
+};
