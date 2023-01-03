@@ -4,6 +4,7 @@ import boom from '@hapi/boom'
 import { pool } from '../libs/postgres';
 import { Pool } from 'pg';
 import { sequelize } from '../libs/sequelize';
+import { Model } from 'sequelize';
 
 export class ProductService {
   public products: Product[]
@@ -32,92 +33,70 @@ export class ProductService {
     }
   }
 
-  /* Methods */
-  public async create(data: Product) {
-    return new Promise<Product>((resolve, reject) => {
-      setTimeout(() => {
-        try {
-          const newProduct = {
-            id: faker.datatype.uuid(),
-            ...data
-          }
-          this.products.push(newProduct);
-          resolve(newProduct)
-        } catch (error) {
-          reject(error)
-        }
-      }, 1000);
-    })
-  }
-
+  // Get all products
   public async find() {
-    return new Promise<unknown>(async (resolve, reject) => {
+    return new Promise<Model<any, any>[]>(async (resolve, reject) => {
       try {
-        const query = 'SELECT * FROM tasks'
-        const [data] = await sequelize.query(query)
-        resolve(data)
+        const products = await sequelize.models.Product.findAll({
+          include: ['category']
+        })
+        resolve(products)
       } catch (error) {
         reject(error)
       }
     })
   }
 
+  // Get a product by id
   public async findOne(id: string) {
-    return new Promise<Product | undefined>((resolve, reject) => {
-      setTimeout(() => {
-        try {
-          const product = this.products.find(item => item.id === id)
-          if (!product) {
-            throw boom.notFound('product not found')
-          }
-          if (product.isBlock) {
-            throw boom.conflict('products is blocked')
-          }
-          resolve(product)
-        } catch (error) {
-          reject(error)
-        }
-      }, 1000);
+    return new Promise<Model<any, any> | null>(async (resolve, reject) => {
+      try {
+        const product = await sequelize.models.Product.findByPk(id)
+        resolve(product)
+      } catch (error) {
+        reject(error)
+      }
     })
   }
 
+  // Create a new product
+  public async create(data: Product) {
+    return new Promise<Model<any, any>>(async (resolve, reject) => {
+      try {
+        const newProduct = await sequelize.models.Product.create(data as any);
+        resolve(newProduct)
+      } catch (error) {
+        reject(error)
+      }
+    })
+  }
+
+  // Update a product
   public async update(id: string, changes: any) {
-    return new Promise<Product>((resolve, reject) => {
-      setTimeout(() => {
-        try {
-          const index = this.products.findIndex(item => item.id === id);
-          if (index === -1) {
-            throw boom.notFound('product not found')
-          }
-
-          const product = this.products[index]
-          this.products[index] = {
-            ...product,
-            ...changes
-          }
-
-          resolve(this.products[index])
-        } catch (error) {
-          reject(error)
-        }
-      }, 1000);
+    return new Promise(async (resolve, reject) => {
+      try {
+        const product = await this.findOne(id)
+        const rta = product?.update(changes)
+        resolve(rta)
+      } catch (error) {
+        reject(error)
+      }
     })
   }
 
+  // Delete a product
   public async delete(id: string) {
-    return new Promise<string>((resolve, reject) => {
-      setTimeout(() => {
-        try {
-          const index = this.products.findIndex(item => item.id === id);
-          if (index === -1) {
-            throw boom.notFound('product not found')
-          }
-          this.products.splice(index, 1)
-          resolve(id)
-        } catch (error) {
-          reject(error)
+    return new Promise(async (resolve, reject) => {
+      try {
+        const product = await this.findOne(id)
+        if (!product) {
+          throw boom.notFound('product not found')
         }
-      }, 1000);
+        const rta = product?.destroy()
+        resolve(rta)
+      } catch (error) {
+        reject(error)
+      }
     })
   }
 }
