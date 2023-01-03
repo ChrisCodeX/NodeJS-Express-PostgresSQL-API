@@ -45,7 +45,14 @@ export const CustomerSchema = {
 
 export class Customer extends Model {
   static associate(models: Sequelize["models"]) {
-    this.belongsTo(models.User, {as: 'user'})
+    // Associdation with User table
+    this.belongsTo(models.User, { as: 'user' })
+
+    // Association with Order table
+    this.hasMany(models.Order, {
+      as: 'orders',
+      foreignKey: 'customerId'
+    })
   }
 
   static config(sequelize: Sequelize) {

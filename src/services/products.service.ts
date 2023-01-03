@@ -1,36 +1,10 @@
-import faker from 'faker';
 import { Product } from '../models/products.model';
 import boom from '@hapi/boom'
-import { pool } from '../libs/postgres';
-import { Pool } from 'pg';
 import { sequelize } from '../libs/sequelize';
 import { Model } from 'sequelize';
 
 export class ProductService {
-  public products: Product[]
-  public pool: Pool
   constructor(){
-    this.products = []
-    this.generate();
-    this.pool = pool;
-    this.pool.on('error', (err) => {
-      console.error(err)
-    })
-  }
-
-  private generate() {
-    const limit = 10
-    for (let i = 0; i < parseInt(limit.toString(), 10); i++) {
-      this.products.push(
-        {
-          id: faker.datatype.uuid(),
-          name: faker.commerce.productName(),
-          price: parseInt(faker.commerce.price(1, 1000), 10),
-          imageUrl: faker.image.imageUrl(),
-          isBlock: faker.datatype.boolean()
-        }
-      );
-    }
   }
 
   // Get all products
