@@ -7,6 +7,9 @@ const description = Joi.string().min(10)
 const image = Joi.string().uri()
 const categoryId = Joi.number().integer();
 
+const limit = Joi.number().integer();
+const offset = Joi.number().integer();
+
 /* Validations schemas - Client request */
 export const createProductSchema = Joi.object({
   name: name.required(),
@@ -26,4 +29,9 @@ export const updateProductSchema = Joi.object({
 
 export const getProductSchema = Joi.object({
   id: id.required()
+})
+
+export const queryProductSchema = Joi.object({
+  limit,
+  offset
 })

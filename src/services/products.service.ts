@@ -8,12 +8,20 @@ export class ProductService {
   }
 
   // Get all products
-  public async find() {
+  public async find(query: any) {
     return new Promise<Model<any, any>[]>(async (resolve, reject) => {
       try {
-        const products = await sequelize.models.Product.findAll({
-          include: ['category']
-        })
+        let options = {
+          include: ['category'],
+          limit: 4,
+          offset: 0
+        }
+        const {limit, offset} = query;
+        if (limit && offset) {
+          options.limit = limit;
+          options.offset = offset
+        }
+        const products = await sequelize.models.Product.findAll(options)
         resolve(products)
       } catch (error) {
         reject(error)

@@ -1,7 +1,7 @@
 import express from 'express';
 import { ProductService } from '../services/products.service';
 import { validatorHandler } from '../middleware/validator.handler';
-import { createProductSchema, updateProductSchema, getProductSchema } from '../schemas/product.schema';
+import { createProductSchema, updateProductSchema, getProductSchema, queryProductSchema } from '../schemas/product.schema';
 
 /* Router */
 export const router = express.Router();
@@ -13,14 +13,17 @@ const productService = new ProductService();
 
 /* Get Methods */
 // Get all products
-router.get('/', async (req, res, next)=>{
-  try {
-    const products = await productService.find()
-    res.status(200).json(products);
-  } catch (error) {
-    next(error)
+router.get('/',
+  validatorHandler(queryProductSchema, 'query'),
+  async (req, res, next) => {
+    try {
+      const products = await productService.find(req.query)
+      res.status(200).json(products);
+    } catch (error) {
+      next(error)
+    }
   }
-});
+);
 
 // Get idProduct from request
 router.get('/:idProduct',
@@ -34,7 +37,8 @@ router.get('/:idProduct',
     } catch (error) {
       next(error)
     }
-  });
+  }
+);
 
 /* Post Methods */
 // Create new product
@@ -48,7 +52,8 @@ router.post('/',
     } catch (error) {
       next(error)
     }
-  })
+  }
+)
 
 /* Patch Methods */
 // Update a product
@@ -64,7 +69,8 @@ router.patch('/:id',
     } catch (error) {
       next(error)
     }
-  })
+  }
+)
 
 /* Delete Methods */
 // Delete a product
@@ -80,4 +86,5 @@ router.delete('/:id',
     } catch (error) {
       next(error)
     }
-  })
+  }
+)
