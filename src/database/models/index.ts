@@ -5,6 +5,7 @@ import { Customer, CustomerSchema } from "./customer.model";
 import { Category, CategorySchema } from "./category.model";
 import { Product, ProductSchema} from './product.model'
 import { Order, OrderSchema } from "./order.model";
+import { OrderProduct, OrderProductSchema } from "./order-products.model";
 
 export function setupModels(sequelize: Sequelize) {
   /* Init all tables */
@@ -13,6 +14,7 @@ export function setupModels(sequelize: Sequelize) {
   Product.init(ProductSchema, Product.config(sequelize))
   Category.init(CategorySchema, Category.config(sequelize))
   Order.init(OrderSchema, Order.config(sequelize))
+  OrderProduct.init(OrderProductSchema, OrderProduct.config(sequelize))
 
   /* relationships between database tables */
   User.associate(sequelize.models)

@@ -2,6 +2,7 @@ import express from 'express'
 import { validatorHandler } from '../middleware/validator.handler'
 import { OrderService } from '../services/order.service'
 import { getOrderSchema, createOrderSchema } from '../schemas/orders.schema'
+import { getOrderProduct, addItemsSchema } from '../schemas/order-product.schema'
 
 /* Router */
 export const router = express.Router()
@@ -44,6 +45,21 @@ router.post('/',
       const body = req.body
       const newOrder = await orderService.create(body)
       res.status(200).json(newOrder)
+    } catch (error) {
+      next(error)
+    }
+  })
+
+// Add items to order
+router.post('/:id/products',
+  validatorHandler(getOrderProduct, 'params'),
+  validatorHandler(addItemsSchema, 'body'),
+  async (req, res, next) => {
+    try {
+      const {id} = req.params
+      const body = req.body
+      const newItem = await orderService.addItem(id, body)
+      res.status(201).json(newItem)
     } catch (error) {
       next(error)
     }

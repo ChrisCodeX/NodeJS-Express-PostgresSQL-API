@@ -58,7 +58,6 @@ router.patch('/:id',
   async (req, res, next) => {
     try {
       const body = req.body
-      console.log(body)
       const { id } = req.params
       const product = await productService.update(id, body)
       res.status(200).json(product)

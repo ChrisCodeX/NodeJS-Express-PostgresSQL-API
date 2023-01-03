@@ -26,12 +26,21 @@ export const OrderSchema = {
     type: DataTypes.DATE,
     field: 'create_at',
     defaultValue: DataTypes.NOW
-  },
+  }
 }
 
 export class Order extends Model {
   static associate(models: Sequelize["models"]) {
+    // Customer table association
     this.belongsTo(models.Customer,{as: 'customer'})
+
+    // OrderProduct association
+    this.belongsToMany(models.Product, {
+      as: 'items',
+      through: models.OrderProduct,
+      foreignKey: 'orderId',
+      otherKey: 'productId'
+    })
   }
 
   static config(sequelize: Sequelize) {
