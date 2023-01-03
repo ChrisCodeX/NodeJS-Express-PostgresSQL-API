@@ -1,26 +1,29 @@
-import joi from 'joi';
+import Joi from 'joi';
 
-const id = joi.string().uuid();
-const name = joi.string().min(3).max(20)
-const price = joi.number().integer().min(10)
-const description = joi.string().min(10)
-const image = joi.string().uri()
+const id = Joi.number().integer();
+const name = Joi.string().min(3).max(20)
+const price = Joi.number().integer().min(10)
+const description = Joi.string().min(10)
+const image = Joi.string().uri()
+const categoryId = Joi.number().integer();
 
 /* Validations schemas - Client request */
-export const createProductSchema = joi.object({
+export const createProductSchema = Joi.object({
   name: name.required(),
   price: price.required(),
   description: description.required(),
-  image: image.required()
+  image: image.required(),
+  categoryId: categoryId.required()
 })
 
-export const updateProductSchema = joi.object({
+export const updateProductSchema = Joi.object({
   name: name,
   price: price,
   description: description,
-  image: image
+  image: image,
+  categoryId
 })
 
-export const getProductSchema = joi.object({
+export const getProductSchema = Joi.object({
   id: id.required()
 })
