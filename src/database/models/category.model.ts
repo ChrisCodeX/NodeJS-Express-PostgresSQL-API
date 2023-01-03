@@ -1,29 +1,24 @@
 import {Model, DataTypes, Sequelize} from 'sequelize';
 
-// User table name
-export const USER_TABLE = 'users';
+// Category table name
+export const CATEGORY_TABLE = 'categories';
 
-// User Schema
-export const UserSchema = {
+// Category Schema
+export const CategorySchema = {
   id: {
     allowNull: false,
     autoIncrement: true,
     primaryKey: true,
     type: DataTypes.INTEGER
   },
-  email: {
+  name: {
     allowNull: false,
     type: DataTypes.STRING,
     unique: true
   },
-  password: {
+  image: {
     allowNull: false,
     type: DataTypes.STRING
-  },
-  role: {
-    allowNull: false,
-    type: DataTypes.STRING,
-    defaultValue: 'customer'
   },
   createdAt: {
     allowNull: false,
@@ -33,19 +28,19 @@ export const UserSchema = {
   }
 }
 
-export class User extends Model {
+export class Category extends Model {
   static associate(models: Sequelize["models"]) {
-    this.hasOne(models.Customer, {
-      as: 'customer',
-      foreignKey: 'userId'
+    this.hasMany(models.Product, {
+      as: 'products',
+      foreignKey: 'categoryId'
     })
   }
 
   static config(sequelize: Sequelize) {
     return {
       sequelize,
-      tableName: USER_TABLE,
-      modelName: 'User',
+      tableName: CATEGORY_TABLE,
+      modelName: 'Category',
       timestamps: false
     }
   }
