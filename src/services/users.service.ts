@@ -1,5 +1,4 @@
 import faker from 'faker';
-import {User} from '../models/users.models';
 import { sequelize } from '../libs/sequelize';
 import boom from '@hapi/boom';
 import {Model} from 'sequelize';
