@@ -1,5 +1,6 @@
 import { sequelize } from "../libs/sequelize"
 import { Model } from "sequelize"
+import { createCategory } from "../schemas/category.schema"
 import boom from '@hapi/boom'
 
 export class CategoryService {
@@ -9,8 +10,8 @@ export class CategoryService {
   public async find() {
     return new Promise(async (resolve, reject) => {
       try {
-        const rta = await sequelize.models.Category.findAll()
-        resolve(rta)
+        const categories = await sequelize.models.Category.findAll()
+        resolve(categories)
       } catch (error) {
         reject(error)
       }
@@ -21,7 +22,9 @@ export class CategoryService {
   public async findOne(id: string) {
     return new Promise<Model<any, any> | null>(async (resolve, reject) => {
       try {
-        const category = await sequelize.models.Category.findByPk(id)
+        const category = await sequelize.models.Category.findByPk(id, {
+          include: ['products']
+        })
         if (!category) {
           throw boom.notFound('category not found')
         }
@@ -33,10 +36,11 @@ export class CategoryService {
   }
 
   // Create a new category
-  public async create(data: unknown) {
+  public async create(data: createCategory) {
     return new Promise(async (resolve, reject) => {
       try {
-        
+        const newCategory = await sequelize.models.Category.create(data as any);
+        resolve(newCategory)
       } catch (error) {
         reject(error)
       }
