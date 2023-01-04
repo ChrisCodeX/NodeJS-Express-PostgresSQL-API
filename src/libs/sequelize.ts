@@ -15,9 +15,22 @@ if (config.dbUrl) {
 }
 
 // Opciones para el entorno de desarrollo o producción
-let options = {
+type opt = {
+  dialect: string,
+  loggin: boolean,
+  dialectOptions?: Object
+}
+let options: opt = {
   dialect: 'postgres',
-  loggin: !config.isProd,
+  loggin: !config.isProd
+}
+
+if (config.isProd) {
+  options.dialectOptions = {
+    ssl: {
+      rejectUnauthorized: false
+    }
+  }
 }
 
 export const sequelize = new Sequelize(dbUrlValidation, {
