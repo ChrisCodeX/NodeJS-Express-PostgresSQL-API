@@ -1,7 +1,7 @@
 import { Product } from '../models/products.model';
 import boom from '@hapi/boom'
 import { sequelize } from '../libs/sequelize';
-import { Model } from 'sequelize';
+import { Model, Op } from 'sequelize';
 
 export class ProductService {
   constructor(){
@@ -17,12 +17,15 @@ export class ProductService {
           limit: 4,
           offset: 0
         }
+
+        // limit & offset query params configurations
         const {limit, offset} = query;
         if (limit && offset) {
           options.limit = limit;
           options.offset = offset
         }
 
+        // price query params configuration
         const {price} = query
 
         if (price) {
@@ -30,6 +33,17 @@ export class ProductService {
             price: price
           }
         }
+
+        // price_min and price_max query params setup
+        const {price_min, price_max} = query
+        if (price_min && price_max) {
+          options.where = {
+            price: {
+              [Op.between]: [price_min,price_max]
+            }
+          }
+        }
+
         const products = await sequelize.models.Product.findAll(options)
         resolve(products)
       } catch (error) {

@@ -3,11 +3,24 @@ import { config } from '../config/config';
 import { setupModels } from '../database/models';
 
 /* Configuración para usar Sequelize ORM */
-const USER = encodeURIComponent(config.dbUser as string)
-const PASSWORD = encodeURIComponent(config.dbPassword as string)
-const URI = `postgres://${USER}:${PASSWORD}@${config.dbHost}:${config.dbPort}/${config.dbName}`
+// const USER = encodeURIComponent(config.dbUser as string)
+// const PASSWORD = encodeURIComponent(config.dbPassword as string)
+// const URI = `postgres://${USER}:${PASSWORD}@${config.dbHost}:${config.dbPort}/${config.dbName}`
 
-export const sequelize = new Sequelize(URI, {
+// Get database URL from an environment variable
+let dbUrlValidation = ''
+
+if (config.dbUrl) {
+  dbUrlValidation = config.dbUrl
+}
+
+// Opciones para el entorno de desarrollo o producción
+let options = {
+  dialect: 'postgres',
+  loggin: !config.isProd,
+}
+
+export const sequelize = new Sequelize(dbUrlValidation, {
   dialect: 'postgres',
   logging: console.log
 })

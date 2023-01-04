@@ -9,6 +9,8 @@ const categoryId = Joi.number().integer();
 
 const limit = Joi.number().integer();
 const offset = Joi.number().integer();
+const price_max = Joi.number().integer();
+const price_min = Joi.number().integer();
 
 /* Validations schemas - Client request */
 export const createProductSchema = Joi.object({
@@ -34,5 +36,10 @@ export const getProductSchema = Joi.object({
 export const queryProductSchema = Joi.object({
   limit,
   offset,
-  price
+  price,
+  price_min,
+  price_max: price_max.when('price_min', {
+    is: Joi.number().integer().required(),
+    then: Joi.required()
+  })
 })
