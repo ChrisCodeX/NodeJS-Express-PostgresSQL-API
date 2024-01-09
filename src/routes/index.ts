@@ -10,6 +10,17 @@ export function routerApi(app: express.Express) {
   const apiV1Router = express.Router()
   app.use('/api/v1', apiV1Router)
 
+  apiV1Router.get('/',
+  async (req, res, next) => {
+    try {
+      res.status(200).json({ message: 'Welcome to the API' });
+    } catch (error) {
+      next(error)
+    }
+  }
+);
+
+  // apiV1Router.use('/', productsRouter);
   apiV1Router.use('/products', productsRouter);
   apiV1Router.use('/categories', categoriesRouter);
   apiV1Router.use('/users', usersRouter);
